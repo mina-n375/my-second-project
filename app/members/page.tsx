@@ -11,7 +11,6 @@ export default async function Page() {
         <p className={styles.empty}>メンバーが登録されていません。</p>
       ) : (
         <ul>
-          zs
           {data.contents.map((member) => (
             <li key={member.id} className={styles.list}>
               <Image
