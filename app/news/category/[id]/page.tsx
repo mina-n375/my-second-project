@@ -1,4 +1,8 @@
-import { getCategoryDetail, getNewsList } from "@/app/_libs/microcms";
+import {
+  getCategoryDetail,
+  getNewsList,
+  getCategoryList,
+} from "@/app/_libs/microcms";
 import { notFound } from "next/navigation";
 import NewsList from "@/app/_components/NewsList";
 import Pagenation from "@/app/_components/Pagination";
@@ -10,6 +14,15 @@ type Props = {
     id: string;
   };
 };
+
+// 静的パスを生成
+export async function generateStaticParams() {
+  const categoryList = await getCategoryList(); // 全カテゴリを取得
+
+  return categoryList.contents.map((category) => ({
+    id: category.id, // 各カテゴリの ID を静的パスとして設定
+  }));
+}
 
 export default async function Page({ params }: Props) {
   const category = await getCategoryDetail(params.id).catch(notFound);

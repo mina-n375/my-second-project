@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getNewsDetail } from "@/app/_libs/microcms";
+import { getNewsDetail, getNewsList } from "@/app/_libs/microcms";
 import Article from "@/app/_components/Article";
 import ButtonLink from "@/app/_components/ButtonLink";
 import styles from "./page.module.css";
@@ -13,9 +13,18 @@ type Props = {
   };
 };
 
-export default async function Page({ params, searchParams }: Props) {
+// 静的パスを生成
+export async function generateStaticParams() {
+  // ニュース一覧を取得し、各記事の ID を静的パスとして設定
+  const newsList = await getNewsList();
+  return newsList.contents.map((news) => ({
+    slug: news.id, // ID を slug として扱う
+  }));
+}
+
+export default async function Page({ params }: Props) {
   const data = await getNewsDetail(params.slug, {
-    draftKey: searchParams.dk,
+    draftKey: undefined, // 静的生成時には draftKey を指定しない
   }).catch(notFound);
 
   return (

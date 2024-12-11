@@ -10,6 +10,23 @@ type Props = {
   };
 };
 
+// 静的パスを生成
+export async function generateStaticParams() {
+  // 全ニュース記事の総数を取得
+  const { totalCount } = await getNewsList();
+
+  // ページ数を計算
+  const totalPages = Math.ceil(totalCount / NEWS_LIST_LIMIT);
+
+  // 各ページのパスを生成
+  const params: { current: string }[] = [];
+  for (let page = 1; page <= totalPages; page++) {
+    params.push({ current: page.toString() });
+  }
+
+  return params;
+}
+
 export default async function Page({ params }: Props) {
   const current = parseInt(params.current, 10);
 
